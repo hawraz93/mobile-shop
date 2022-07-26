@@ -14,9 +14,9 @@
         <div class="flex-col space-y-4">
         <x-table>
             <x-slot name='head'>
-                <x-table.heading sortable wire:click="sortBy('name')">name</x-table.heading>
-                <x-table.heading sortable wire:click="sortBy('model')">model</x-table.heading>
-                <x-table.heading sortable wire:click="sortBy('company')">Company</x-table.heading>
+                <x-table.heading sortable wire:click="sortBy('name')" :direction="$sortField === 'name' ? $sortDirection :null" >name</x-table.heading>
+                <x-table.heading sortable wire:click="sortBy('model')"  :direction="$sortField === 'model' ? $sortDirection :null">model</x-table.heading>
+                <x-table.heading sortable wire:click="sortBy('company')" :direction="$sortField === 'company' ? $sortDirection :null">Company</x-table.heading>
             </x-slot>
             <x-slot name='body'>
 

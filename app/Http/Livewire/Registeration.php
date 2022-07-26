@@ -19,12 +19,20 @@ class Registeration extends Component
         $this->resetPage();
     }
 
-    public $sortField ;
+
+    protected $queryString =['sortField' , 'sortDirection'];
+
+    public $sortField ='created_at' ;
     public $sortDirection = 'asc';
 
-    // public function sortBy($field){
-    //   $this->sortField = $field;
-    // }
+    public function sortBy($field){
+  
+      $this->sortDirection= $this->sortField ===$field 
+            ?  $this->sortDirection =  $this->sortDirection === 'asc' ? 'desc' :'asc'
+            : 'asc';
+     
+            $this->sortField = $field;
+    }
 
 
 
@@ -32,7 +40,7 @@ class Registeration extends Component
     {
           $array = [
             'devices' => devices::where('name', 'like','%'.$this->search.'%')
-                          ->orderBy($this->sortField,$this->sortDirection)
+                          ->orderBy($this->sortField, $this->sortDirection)
                           ->paginate(10),
             'colors' => color::paginate(10),
           ];
