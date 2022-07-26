@@ -5,9 +5,13 @@
 
 
     <div class="bg-white w-1/2 py space-y-4  ">
-        <div>
+        <div class=" flex justify-between">
             <div class="w-1/4">
-                <input wire:model='search' type="text" class=" py-1 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+                <input wire:model='search'  type="text" class=" py-1 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">
+            </div>
+            <div>
+
+                <x-button wire:click="create">New</x-button>
             </div>
         </div>
 
@@ -17,6 +21,7 @@
                 <x-table.heading sortable wire:click="sortBy('name')" :direction="$sortField === 'name' ? $sortDirection :null" >name</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('model')"  :direction="$sortField === 'model' ? $sortDirection :null">model</x-table.heading>
                 <x-table.heading sortable wire:click="sortBy('company')" :direction="$sortField === 'company' ? $sortDirection :null">Company</x-table.heading>
+                 <x-table.heading/>
             </x-slot>
             <x-slot name='body'>
 
@@ -25,6 +30,9 @@
                     <x-table.cell>{{$device->name}}</x-table.cell>
                     <x-table.cell>{{$device->model}}</x-table.cell>
                     <x-table.cell>{{$device->company}}</x-table.cell>
+                    <x-table.cell>
+                        <x-button  wire:click="edit({{$device->id}})">Edit</x-button>
+                    </x-table.cell>
                    
                 </x-table.row>
                 @empty  
@@ -52,6 +60,36 @@
 
           </div>
         </div>
+
+     <form wire:submit.prevent="save">
+        <x-dialog-modal  wire:model.defer="showDeviceEditModel">
+            <x-slot name='title'>Edit Device</x-slot>
+            <x-slot name='content'>
+                <div class="mt-2 ">
+                    <x-label for="name" value="{{ __('Name') }}" />
+                    <x-input wire:model.defer="editing.name" id="name" type='text' class="block mt-1 w-full"
+                        required :value="old('name')"  autofocus />
+                    <x-input-error for="editing.name" class="mt-2" />
+                </div>
+                <div class="mt-2 ">
+                    <x-label for="model" value="{{ __('Model') }}" />
+                    <x-input wire:model.defer="editing.model" id="model" type='text' class="block mt-1 w-full"
+                        required :value="old('model')" autofocus />
+                    <x-input-error for="editing.model" class="mt-2" />
+                </div>
+                <div class="mt-2 ">
+                    <x-label for="company" value="{{ __('Company') }}" />
+                    <x-input wire:model.defer="editing.company" id="company" type='text' class="block mt-1 w-full"
+                        required :value="old('company')" autofocus />
+                    <x-input-error for="editing.company" class="mt-2" />
+                </div>
+            </x-slot>
+            <x-slot name='footer'>
+                <x-button class="bg-slate-300">Cancel</x-button>
+                <x-button  class="bg-blue-500">Save</x-button>
+            </x-slot>
+        </x-dialog-modal>
+    </form>
     </div>
 
     {{-- <div class="bg-white w-1/2">

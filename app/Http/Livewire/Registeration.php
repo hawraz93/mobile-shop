@@ -19,6 +19,46 @@ class Registeration extends Component
         $this->resetPage();
     }
 
+    public $showDeviceEditModel=false;
+    public devices $editing;
+
+
+
+
+    protected $rules=[
+        'editing.name' =>'required|min:2|max:100',
+        'editing.model' =>'required|min:2|max:100',
+        'editing.company' =>'required|min:2|max:100',
+    ];
+    
+    public function mount(){
+      $this->editing = $this->makeBlandDevices();
+    }
+    public function edit(devices $devicesId){
+      if($this->editing->isNot($devicesId))
+      $this->editing = $devicesId;
+      $this->showDeviceEditModel =true;
+    }
+
+    public function save(){
+      $this->validate();
+      $this->editing->save();
+      $this->showDeviceEditModel=false;
+    }
+    public function makeBlandDevices(){
+      return devices::make();
+    }
+
+    public function create(){
+      if ($this->editing->getKey()) 
+         $this->editing = $this->makeBlandDevices();
+         $this->showDeviceEditModel= true;
+      
+   
+    }
+
+
+
 
     protected $queryString =['sortField' , 'sortDirection'];
 
