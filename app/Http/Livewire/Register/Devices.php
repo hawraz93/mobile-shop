@@ -1,15 +1,13 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Register;
 
-use App\Models\color;
-use App\Models\devices;
+use App\Models\devices as ModelsDevices;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class Registeration extends Component
+class Devices extends Component
 {
-
     use WithPagination;
  
     public $search = '';
@@ -20,7 +18,8 @@ class Registeration extends Component
     }
 
     public $showDeviceEditModel=false;
-    public devices $editing;
+    public $deviceDeleteModal=false;
+    public ModelsDevices $editing;
 
 
 
@@ -34,7 +33,9 @@ class Registeration extends Component
     public function mount(){
       $this->editing = $this->makeBlandDevices();
     }
-    public function edit(devices $devicesId){
+
+    
+    public function edit(ModelsDevices $devicesId){
       if($this->editing->isNot($devicesId))
       $this->editing = $devicesId;
       $this->showDeviceEditModel =true;
@@ -46,7 +47,7 @@ class Registeration extends Component
       $this->showDeviceEditModel=false;
     }
     public function makeBlandDevices(){
-      return devices::make();
+      return ModelsDevices::make();
     }
 
     public function create(){
@@ -55,6 +56,16 @@ class Registeration extends Component
          $this->showDeviceEditModel= true;
       
    
+    }
+
+    public function confirmDeleteDevice( $id){
+      $this->deviceDeleteModal=$id;
+    }
+
+    public function deleteDevice(ModelsDevices $device){
+      
+      $device->delete();
+      $this->deviceDeleteModal=false;
     }
 
 
@@ -79,12 +90,10 @@ class Registeration extends Component
     public function render()
     {
           $array = [
-            'devices' => devices::where('name', 'like','%'.$this->search.'%')
+            'devices' => ModelsDevices::where('name', 'like','%'.$this->search.'%')
                           ->orderBy($this->sortField, $this->sortDirection)
                           ->paginate(10),
-            'colors' => color::paginate(10),
           ];
-
-        return view('livewire.registeration' ,$array);
+        return view('livewire.register.devices',$array);
     }
 }

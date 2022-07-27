@@ -31,4 +31,8 @@ Route::middleware([
     Route::get('/settings', function () {
         return view('settings');
     })->name('settings');
+
+    Route::get('/boxs', function () {
+        return view('boxs');
+    })->name('boxs');
 });

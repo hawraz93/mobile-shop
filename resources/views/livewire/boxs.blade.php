@@ -55,21 +55,20 @@
                     <div></div>
                 </div>
                
+             
                 <div class="space-y-4 sm:space-y-1">
                   
                     @forelse ($accessories as $item)
 
                     <!-- Collection Section -->
 
-                    <div
-                        class=" each flex justify-between border-l-2  border-gray-300  mb-3 hover:border-gray-500 p-3  overflow-x-auto">
+                    <div class=" each flex justify-between border-l-2  border-gray-300  mb-3 hover:border-gray-500 p-3  overflow-x-auto">
 
                         <div class="flex space-x-3 items-center">
                             <div class=" text-blue-600 font-semibold text-sm lg:text-2xl">{{$item->name}}</div>
 
                             <div class="inline-flex items-center -space-x-px text-xs rounded-md">
-                                <button
-                                    class="lg:px-4 lg:py-2  font-medium border rounded-l-md hover:z-10 focus:outline-none border-r-0 focus:border-indigo-600 focus:z-10 hover:bg-gray-50 active:opacity-75 "
+                                <button class="lg:px-4 lg:py-2  font-medium border rounded-l-md hover:z-10 focus:outline-none border-r-0 focus:border-indigo-600 focus:z-10 hover:bg-gray-50 active:opacity-75 "
                                     type="button">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6" fill="none" viewBox="0 0 24 24"
                                         stroke="currentColor" stroke-width="2">
@@ -77,12 +76,10 @@
                                     </svg>
                                 </button>
 
-                                <span
-                                    class=" lg:px-4 lg:py-1 px-4 py-1 font-medium border hover:z-10 focus:outline-none  focus:z-10  active:opacity-75 border-gray-300  border-y lg:text-xl">12
+                                <span class=" lg:px-4 lg:py-1 px-4 py-1 font-medium border hover:z-10 focus:outline-none  focus:z-10  active:opacity-75 border-gray-300  border-y lg:text-xl">12
                                 </span>
 
-                                <button
-                                    class="lg:px-4 lg:py-2 font-medium border rounded-r-md hover:z-10 focus:outline-none focus:border-indigo-600 focus:z-10 hover:bg-gray-50 active:opacity-75"
+                                <button class="lg:px-4 lg:py-2 font-medium border rounded-r-md hover:z-10 focus:outline-none focus:border-indigo-600 focus:z-10 hover:bg-gray-50 active:opacity-75"
                                     type="button">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 " fill="none" viewBox="0 0 24 24"
                                         stroke="currentColor" stroke-width="2">
@@ -93,7 +90,7 @@
                             <div
                                 class="justify-end m-auto text-sm lg:text-2xl text-gray-600 divide-x-[3px] divide-gray-400 ">
                                 <span>{{$item->quantity}}</span>
-                                <span class="px-2">{{$item->type}}</span>
+                                <span class="px-2">{{$item->color->color}}</span>
                                 <span class="px-2">{{$item->note}}</span>
                             </div>
 
@@ -103,7 +100,7 @@
 
                                 <div class="flex items-center">
 
-                                    <x-button   wire:click="editAccessories({{$item->id}})">Edit</x-button>
+                                    <x-button  wire:click="editAccessories({{$item->id}})">Edit</x-button>
                                     <x-button  wire:click="confirmDeleteAccessories({{$item->id}})">Delete</x-button>
 
                                 </div>
@@ -157,11 +154,11 @@
     </div>
     {{ $boxs->links() }}
 
-
     <form wire:submit.prevent='saveAccessories'>
         <x-dialog-modal wire:model="showCreateAccessoriesModal">
             <x-slot name="title">Create</x-slot>
             <x-slot name="content">
+
                 <div class="row">
                     <div class="mt-2 ">
                         <x-label for="name" value="{{ __('Name') }}" />
@@ -170,33 +167,63 @@
                         <x-input-error for="editing.name" class="mt-2" />
                     </div>
                     <div class="mt-4">
-                        <x-label for="type" value="{{ __('Type') }}" />
-                        <x-input wire:model.defer="editing.type" id="type" type="text" class="block mt-1 w-full"
-                            required :value="old('type')" autofocus />
-                        <x-input-error for="editing.type" class="mt-2" />
-
+                        <x-label for="size" value="{{ __('Size') }}" />
+                        <x-input wire:model.defer="editing.size" id="size" type="text" class="block mt-1 w-full"
+                            required :value="old('editing.size')" autofocus />
+                        <x-input-error for="editing.size" class="mt-2" />
                     </div>
+
+                    <div class="mt-4">
+                        <x-label for="quality" value="{{ __('Quality') }}" />
+                        <x-input wire:model.defer="editing.quality" id="quality" type="number"
+                            class="block mt-1 w-full" required autofocus />
+                        <x-input-error for="editing.quality" class="mt-2" />
+                    </div>
+
                     <div class="mt-4">
                         <x-label for="quantity" value="{{ __('Quantity') }}" />
                         <x-input wire:model.defer="editing.quantity" id="quantity" type="number"
                             class="block mt-1 w-full" required autofocus />
                         <x-input-error for="editing.quantity" class="mt-2" />
-
                     </div>
+
                     <div class="mt-4">
                         <x-label for="sellPrice" value="{{ __('Sell Price') }}" />
                         <x-input wire:model.defer="editing.sellPrice" id="sellPrice" class="block mt-1 w-full"
                             type="text" :value="old('sellPrice')" required />
                         <x-input-error for="editing.sellPrice" class="mt-2" />
-
                     </div>
+
                     <div class="mt-4">
                         <x-label for="buyPrice" value="{{ __('Buy Price') }}" />
                         <x-input wire:model.defer="editing.buyPrice" id="buyPrice" class="block mt-1 w-full" type="text"
                             :value="old('buyPrice')" required />
                         <x-input-error for="editing.buyPrice" class="mt-2" />
-
                     </div>
+
+                    <div class="mt-4">
+                        <x-label for="device_id" value="{{ __('Devices') }}" />
+                        <select wire:model.defer="editing.device_id" id="device_id" class="block mt-1 w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" type="text"
+                            :value="old('editing.device_id')" required >
+                             @foreach ($devices as  $device)
+                                 <option value="{{$device->id}}">{{$device->name}}</option>
+                             @endforeach
+                        </select>
+                        <x-input-error for="editing.device_id" class="mt-2" />
+                    </div>
+
+                    <div class="mt-4">
+                        <x-label for="color_id" value="{{ __('Colors') }}" />
+                        <select wire:model.defer="editing.color_id" id="color_id" class="block mt-1 w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" type="text"
+                            :value="old('color_id')" required >
+                             @foreach ($colors as $color)
+                                 <option value="{{$color->id}}">{{$color->color}}</option>
+                             @endforeach
+                        </select>
+                        <x-input-error for="editing.color_id" class="mt-2" />
+                    </div>
+                 
+                    
                     <div class="mt-4">
                         <x-label for="note" value="{{__('Note')}}" />
                         <x-textarea wire:model.defer="editing.note" id="note" />

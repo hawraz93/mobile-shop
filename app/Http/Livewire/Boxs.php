@@ -2,15 +2,15 @@
 
 namespace App\Http\Livewire;
 
-use App\Http\Controllers\Boxs;
 use App\Models\accessories;
-use App\Models\boxs as ModelsBoxs;
-use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Models\boxs as ModelsBoxs;
+use App\Models\color;
+use App\Models\devices;
 
-class Post extends Component
-{    
+class Boxs extends Component
+{
     use WithPagination;
  
     public $search = '';
@@ -23,15 +23,17 @@ class Post extends Component
 
     public $showCreateAccessoriesModal=false;
     public $accessoriesDeleteModal=false;
-     
-    public $accessorie=false,$accessories ,$boxId;
+    public $accessorie=false,
+           $accessories,
+           $boxId;
 
     public function mount(){
           $this->editing = $this->makeBlankAccessories();
+          $this->editing['color_id'] =4 ;
     }
 
     public function makeBlankAccessories(){
-        return accessories::make(['box_id' =>$this->boxId]);
+        return accessories::make(['box_id' =>$this->boxId ]);
     }
    
     public function showAccessories($boxId){
@@ -50,22 +52,22 @@ class Post extends Component
     $this->showCreateAccessoriesModal=true;
 
    }
+
    public function confirmDeleteAccessories($id){
        $this->accessoriesDeleteModal=$id;
    }
-   public function deleteAccessories(accessories $accessorieId){
-    $accessorieId->delete();
 
-    $this->showaccessories($this->boxId);
-    $this->accessoriesDeleteModal=false;
+    public function deleteAccessories(accessories $accessorieId){
+        $accessorieId->delete();
+        $this->showaccessories($this->boxId);
+        $this->accessoriesDeleteModal=false;
 
    }
 
     public function editAccessories(accessories $accessorie){
-        if($this->editing->isNot($accessorie))
+        if($this->editing->isNot($accessorie))    
         $this->editing = $accessorie;
         $this->showCreateAccessoriesModal=true;
-
     }
 
 
@@ -87,21 +89,21 @@ class Post extends Component
 
 
     public function saveAccessories(){
-
         $this->validate();
-
         $this->editing->save();
-
         $this->showCreateAccessoriesModal=false;
         $this->showAccessories($this->boxId);
     }  
+
     public function render()
     {
         $array=[
             'boxs' =>ModelsBoxs::where('id', 'like', '%'.$this->search.'%')->paginate(30),  
-      ];
+              'devices' =>devices::get(),
+              'colors' =>color::get(),
+        ];
        
-        return view('livewire.post', $array);
+        return view('livewire.boxs', $array);
     }
-
+   
 }

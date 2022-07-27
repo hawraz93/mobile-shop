@@ -5,11 +5,11 @@
         </h2>
     </x-slot>
    
-    <div class="py-4">
-        <div class=" sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-4" wire:ignore>
-               <livewire:registeration>
-            </div>
-        </div>
+    <div class=" mt-3 grid md:grid-cols-1 lg:grid-cols-2">
+      
+               <livewire:register.devices>
+
+               <livewire:register.color>
+       
     </div>
 </x-app-layout>
