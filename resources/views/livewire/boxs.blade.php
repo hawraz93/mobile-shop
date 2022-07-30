@@ -169,7 +169,7 @@
                     <div class="mt-4">
                         <x-label for="size" value="{{ __('Size') }}" />
                         <x-input wire:model.defer="editing.size" id="size" type="text" class="block mt-1 w-full"
-                            required :value="old('editing.size')" autofocus />
+                           :value="old('editing.size')" autofocus />
                         <x-input-error for="editing.size" class="mt-2" />
                     </div>
 

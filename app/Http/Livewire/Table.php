@@ -27,14 +27,14 @@ class Table extends Component
     public function rules(){
         return[
             'accessory.name' =>'required|string|max:100',
-            'accessory.size' =>'string|max:100',
-            'accessory.quality' =>'string|max:100',
+            'accessory.size' =>'nullable|string|max:100',
+            'accessory.quality' =>'nullable|string|max:100',
             'accessory.quantity' =>'required|numeric|max:1000',
             'accessory.sellPrice' =>'required|numeric|max:1000000',
             'accessory.buyPrice' =>'required|numeric|max:1000000',
             'accessory.device_id' =>'required|numeric',
             'accessory.color_id' =>'nullable|numeric',
-            'accessory.box_id' =>'required|numeric',
+            'accessory.box_id' =>'nullable|numeric',
             'accessory.note' =>'nullable|string|min:5',
         ];
     }
@@ -48,7 +48,7 @@ class Table extends Component
 
 
     public function create(){
-        if($this->accessory->getKey())
+        // if($this->accessory->getKey())
         $this->accessory = $this->makeBlankColor();
         $this->showModel=true;
     }
@@ -74,7 +74,6 @@ class Table extends Component
         $this->deleteModal= false;
     }
 
-
     protected $queryString =['sortField' , 'sortDirection'];
 
     public $sortField ='created_at' ;
@@ -85,7 +84,6 @@ class Table extends Component
       $this->sortDirection= $this->sortField ===$field 
             ?  $this->sortDirection =  $this->sortDirection === 'asc' ? 'desc' :'asc'
             : 'asc';
-     
             $this->sortField = $field;
     }
 
@@ -93,12 +91,13 @@ class Table extends Component
     public function render()
     {
         $array = [
-            'accessories' => accessories::where('name', 'like','%'.$this->search.'%')
+            'accessories' => accessories::with('device')->where('name', 'like','%'.$this->search.'%')
                           ->orderBy($this->sortField, $this->sortDirection)
                           ->paginate(10),
-                          'devices' =>devices::get(),
-              'colors' =>color::get(),
-              'boxs' =>boxs::get(),
+                          
+            'devices' =>devices::get(),
+            'colors' =>color::get(),
+            'boxs' =>boxs::get(),
           ];
         return view('livewire.table',$array);
     }
