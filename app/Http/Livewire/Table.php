@@ -48,7 +48,8 @@ class Table extends Component
 
 
     public function create(){
-        // if($this->accessory->getKey())
+        dd('hi');
+        if($this->accessory->getKey())
         $this->accessory = $this->makeBlankColor();
         $this->showModel=true;
     }

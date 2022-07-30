@@ -2,32 +2,20 @@
 
     <div class=" bg-white overflow-hidden shadow-xl sm:rounded-lg p-4  " >
         
-        <table class="table-auto">
-            <thead>
-              <tr >
-                <th>Song</th>
-                <th>Artist</th>
-                <th>Year</th>
-              </tr>
-            </thead>
-            <tbody class="border ">
-              <tr>
-                <td>The Sliding Mr. Bones (Next Stop, Pottersville)</td>
-                <td>Malcolm Lockyer</td>
-                <td>1961</td>
-              </tr>
-              <tr>
-                <td>Witchy Woman</td>
-                <td>The Eagles</td>
-                <td>1972</td>
-              </tr>
-              <tr>
-                <td>Shining Star</td>
-                <td>Earth, Wind, and Fire</td>
-                <td>1975</td>
-              </tr>
-            </tbody>
-          </table>
+    <x-table2>
+      <x-slot name='head'>
+        <x-table.th>name</x-table.th>
+        <x-table.th>phone</x-table.th>
+        <x-table.th>address</x-table.th>
+        </x-slot>   
+        <x-slot name='body'>
+            <x-table.tr>
+                     <x-table.td>
+
+                     </x-table.td>
+            </x-table.tr>
+        </x-slot>     
+    </x-table2>
 
     </div>
 
