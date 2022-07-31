@@ -90,7 +90,7 @@
                             <div
                                 class="justify-end m-auto text-sm lg:text-2xl text-gray-600 divide-x-[3px] divide-gray-400 ">
                                 <span>{{$item->quantity}}</span>
-                                <span class="px-2">{{$item->color->color}}</span>
+                                <span class="px-2">{{$item->color->color  ?? ''}}</span>
                                 <span class="px-2">{{$item->note}}</span>
                             </div>
 
@@ -159,68 +159,63 @@
             <x-slot name="title">Create</x-slot>
             <x-slot name="content">
 
-                <div class="row">
-                    <div class="mt-2 ">
+                <div class="row flex space-x-2">
+                    <div class="mt-2 w-1/3  ">
                         <x-label for="name" value="{{ __('Name') }}" />
                         <x-input wire:model.defer="editing.name" id="name" type='text' class="block mt-1 w-full"
                             required :value="old('name')" autofocus />
                         <x-input-error for="editing.name" class="mt-2" />
                     </div>
-                    <div class="mt-4">
+                    <div class="mt-2 w-1/3">
                         <x-label for="size" value="{{ __('Size') }}" />
                         <x-input wire:model.defer="editing.size" id="size" type="text" class="block mt-1 w-full"
                            :value="old('editing.size')" autofocus />
                         <x-input-error for="editing.size" class="mt-2" />
                     </div>
 
-                    <div class="mt-4">
+                    <div class="mt-2 w-1/3">
                         <x-label for="quality" value="{{ __('Quality') }}" />
                         <x-input wire:model.defer="editing.quality" id="quality" type="number"
                             class="block mt-1 w-full" required autofocus />
                         <x-input-error for="editing.quality" class="mt-2" />
                     </div>
-
-                    <div class="mt-4">
+                    </div>
+                    <div class="flex space-x-2">
+ 
+                    <div class="mt-4 w-1/3">
                         <x-label for="quantity" value="{{ __('Quantity') }}" />
                         <x-input wire:model.defer="editing.quantity" id="quantity" type="number"
                             class="block mt-1 w-full" required autofocus />
                         <x-input-error for="editing.quantity" class="mt-2" />
                     </div>
 
-                    <div class="mt-4">
+                    <div class="mt-4 w-1/3">
                         <x-label for="sellPrice" value="{{ __('Sell Price') }}" />
                         <x-input wire:model.defer="editing.sellPrice" id="sellPrice" class="block mt-1 w-full"
                             type="text" :value="old('sellPrice')" required />
                         <x-input-error for="editing.sellPrice" class="mt-2" />
                     </div>
 
-                    <div class="mt-4">
+                    <div class="mt-4 w-1/3">
                         <x-label for="buyPrice" value="{{ __('Buy Price') }}" />
                         <x-input wire:model.defer="editing.buyPrice" id="buyPrice" class="block mt-1 w-full" type="text"
                             :value="old('buyPrice')" required />
                         <x-input-error for="editing.buyPrice" class="mt-2" />
                     </div>
-
-                    <div class="mt-4">
-                        <x-label for="device_id" value="{{ __('Devices') }}" />
-                        <select wire:model.defer="editing.device_id" id="device_id" class="block mt-1 w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" type="text"
-                            :value="old('editing.device_id')" required >
-                             @foreach ($devices as  $device)
-                                 <option value="{{$device->id}}">{{$device->name}}</option>
-                             @endforeach
-                        </select>
-                        <x-input-error for="editing.device_id" class="mt-2" />
                     </div>
 
-                    <div class="mt-4">
-                        <x-label for="color_id" value="{{ __('Colors') }}" />
-                        <select wire:model.defer="editing.color_id" id="color_id" class="block mt-1 w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" type="text"
-                            :value="old('color_id')" required >
-                             @foreach ($colors as $color)
-                                 <option value="{{$color->id}}">{{$color->color}}</option>
-                             @endforeach
-                        </select>
-                        <x-input-error for="editing.color_id" class="mt-2" />
+                     <div class="flex space-x-2">
+                    <div class="mt-4 w-1/2">
+                        <x-label for="device" value="{{ __('Devices') }}" />
+                     <x-form.select    :array="$devices" target='name'  model="editing.device_id" id="device"/>
+
+                    </div>
+
+                    <div class="mt-4 w-1/2">
+                        <x-label for="color" value="{{ __('Colors') }}" />
+                        <x-form.select :array='$colors' target="color" model="accessory.color_id" id="color" />
+
+                    </div>
                     </div>
                  
                     
@@ -229,7 +224,7 @@
                         <x-textarea wire:model.defer="editing.note" id="note" />
                         <x-input-error for="editing.note" class="mt-2" />
                     </div>
-                </div>
+                
 
             </x-slot>
             <x-slot name="footer">

@@ -128,8 +128,6 @@
 
                             @endforelse
 
-
-
                         </x-slot>
                     </x-table>
                     <div>

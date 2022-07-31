@@ -75,8 +75,8 @@ class Boxs extends Component
     {
         return[
             'editing.name' =>'required|string|max:100',
-            'editing.size' =>'string|max:100',
-            'editing.quality' =>'string|max:100',
+            'editing.size' =>'nullable|string|max:100',
+            'editing.quality' =>'nullable|string|max:100',
             'editing.quantity' =>'required|numeric|max:1000',
             'editing.sellPrice' =>'required|numeric|max:1000000',
             'editing.buyPrice' =>'required|numeric|max:1000000',
