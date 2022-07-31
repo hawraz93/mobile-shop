@@ -10,6 +10,7 @@
                <livewire:register.devices>
 
                <livewire:register.color>
+               <livewire:register.types>
        
     </div>
 </x-app-layout>

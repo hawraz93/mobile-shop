@@ -4,8 +4,10 @@ namespace App\Http\Livewire;
 
 use App\Models\accessories;
 use App\Models\boxs;
+use App\Models\buy;
 use App\Models\color;
 use App\Models\devices;
+use App\Models\types;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -34,6 +36,7 @@ class Table extends Component
             'accessory.buyPrice' =>'required|numeric|max:1000000',
             'accessory.device_id' =>'required|numeric',
             'accessory.color_id' =>'nullable|numeric',
+            'accessory.type_id' =>'nullable|numeric',
             'accessory.box_id' =>'nullable|numeric',
             'accessory.note' =>'nullable|string|min:5',
         ];
@@ -48,7 +51,7 @@ class Table extends Component
 
 
     public function create(){
-        dd('hi');
+       
         if($this->accessory->getKey())
         $this->accessory = $this->makeBlankColor();
         $this->showModel=true;
@@ -89,17 +92,30 @@ class Table extends Component
     }
 
 
+
+
+
     public function render()
     {
         $array = [
             'accessories' => accessories::with('device')->where('name', 'like','%'.$this->search.'%')
                           ->orderBy($this->sortField, $this->sortDirection)
                           ->paginate(10),
-                          
+            
+            'buys'=>buy::with('accessory')->where('confirm',0)->get(),
             'devices' =>devices::get(),
+            'types' =>types::get(),
             'colors' =>color::get(),
             'boxs' =>boxs::get(),
           ];
         return view('livewire.table',$array);
+    }
+
+    public function buy(accessories $accessory){
+          buy::create([
+                 'accessory_id'=>$accessory->id,
+                 'sellPrice'=>$accessory->sellPrice,
+                 'quantity'=>1,
+          ]);
     }
 }

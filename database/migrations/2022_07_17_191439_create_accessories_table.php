@@ -6,11 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+    
     public function up()
     {
         Schema::create('accessories', function (Blueprint $table) {
@@ -18,12 +14,13 @@ return new class extends Migration
             $table->string('name');
             $table->string('size')->nullable();
             $table->string('quality')->nullable();
+            $table->foreignId('type_id')->nullable()->constrained('types');
             $table->string('quantity')->nullable();
             $table->string('sellPrice')->nullable();
             $table->string('buyPrice')->nullable();
-            $table->foreignId('color_id')->constrained('colors')->nullable();
-            $table->foreignId('device_id')->constrained('devices')->nullable();
-            $table->foreignId('box_id')->constrained('boxs')->nullable();
+            $table->foreignId('color_id')->nullable()->constrained('colors');
+            $table->foreignId('device_id')->nullable()->constrained('devices');
+            $table->foreignId('box_id')->nullable()->constrained('boxs');
             $table->foreignId('user_id')->constrained('users');
             $table->longText('note')->nullable();
             $table->softDeletes();

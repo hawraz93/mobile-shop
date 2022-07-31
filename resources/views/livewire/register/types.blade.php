@@ -1,9 +1,10 @@
 <div class="max-w-7xl  sm:px-6 lg:px-8 mt-3 lg:mt-0">
     <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-4">
-        <div class="space-y-4  ">
-            <div class="my-4">
-                <span class="text-2xl my-4 py-4 text-gray-400 font-serif">Colors table</span>
-            </div>
+        <div class="my-4">
+
+            <span class="text-2xl my-4 py-4 text-gray-400 font-serif">Type of Accessories</span>
+        </div>
+        <div class="  space-y-4  ">
             <div class=" flex justify-between">
                 <div class="w-1/4">
                     <input wire:model='search' type="text"
@@ -24,16 +25,16 @@
                     </x-slot>
                     <x-slot name='body'>
 
-                        @forelse ( $colors as $color )
+                        @forelse ( $types as $type )
                         <x-table.row wire:loading.class.delay="opacity-50">
-                            <x-table.cell>{{$color->color}}</x-table.cell>
+                            <x-table.cell>{{$type->name}}</x-table.cell>
                             <x-table.cell>
-                                <x-button wire:click="edit({{$color->id}})">
+                                <x-button wire:click="edit({{$type->id}})">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 " fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                       </svg>
                                 </x-button>
-                                <x-danger-button class="ml-3" wire:click="confirmDelete({{$color->id}})"
+                                <x-danger-button class="ml-3" wire:click="confirmDelete({{$type->id}})"
                                     wire:loading.attr="disabled">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -66,25 +67,25 @@
                     </x-slot>
                 </x-table>
                 <div>
-                    {{$colors->links()}}
+                    {{$types->links()}}
 
                 </div>
             </div>
 
             <form wire:submit.prevent="save">
-                <x-dialog-modal wire:model.defer="showColorModel">
-                    <x-slot name='title'>Edit Color</x-slot>
+                <x-dialog-modal wire:model.defer="showModel">
+                    <x-slot name='title'>Edit Types of Accessories</x-slot>
                     <x-slot name='content'>
                         <div class="mt-2 ">
-                            <x-label for="color" value="{{ __('Name') }}" />
-                            <x-input wire:model.defer="editing.color" id="color" type='text'
-                                class="block mt-1 w-full" required :value="old('editing.color')" autofocus />
-                            <x-input-error for="editing.color" class="mt-2" />
+                            <x-label for="type" value="{{ __('Name') }}" />
+                            <x-input wire:model.defer="editing.name" id="type" type='text'
+                                class="block mt-1 w-full" required :value="old('editing.name')" autofocus />
+                            <x-input-error for="editing.name" class="mt-2" />
                         </div>
                     
                     </x-slot>
                     <x-slot name='footer'>
-                        <x-secondary-button wire:click="$toggle('showColorModel')"
+                        <x-secondary-button wire:click="$toggle('showModel')"
                             wire:loading.attr="disabled">
                             {{ __('Cancel') }}
                         </x-secondary-button>
@@ -122,7 +123,7 @@
                     </div>
                 </x-slot>
                 <x-slot name="footer">
-                    <button wire:click='$set("colorDeleteModal", false)'
+                    <button wire:click='$set("DeleteModal", false)'
                         class="flex-1 px-4 py-2 bg-white hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-md">
                         Cancel
                     </button>
@@ -134,9 +135,6 @@
                 </x-slot>
             </x-dialog-modal>
 
-
-     
-      
         </div>
     </div>
 </div>
