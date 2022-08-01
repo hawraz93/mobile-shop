@@ -8,19 +8,30 @@
                 <x-table.th>quantity</x-table.th>
             </x-slot>
             <x-slot name='body'>
-                @forelse ($buys as $item)
+                @forelse ($sells as $item)
                 <x-table.tr>
                     <x-table.td> {{$item->accessory->name}} </x-table.td>
                     <x-table.td> {{$item->sellPrice}} </x-table.td>
-                    <x-table.td> <input type="text" value='{{$item->quantity}}'> </x-table.td>
-                    <x-table.td> <span class="text-red-600">X</span> </x-table.td>
+                    <x-table.td> 
+                        <input  type="text" value='{{$item->quantity}}'>
+                     </x-table.td>
+                    <x-table.td> 
+                             <button wire:click='confirmSell({{$item->id}})' class="text-green-800  bg-green-100  font-medium px-2.5 py-0.5 rounded-full  dark:bg-green-200 dark:text-green-900">{{__('Confirm')}}</button>
+                    </x-table.td>
+                    <x-table.td>
+                        <div wire:click='deleteSell({{$item->id}})'>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500 bg-gray-100 rounded-full cursor-pointer" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>    
+                        </div>
+                    </x-table.td>
                 </x-table.tr>
                     @empty
                     <x-table.tr  calspan="5">
                     <x-table.td>
                         <div class="flex justify-center items-center">
                              <span class="text-xl font-mono text-gray-400">
-                                There is no accessories to buy  
+                                There is no accessories to sell  
                              </span>
                         </div>
                     </x-table.td>
@@ -79,7 +90,7 @@
 
                             @forelse ( $accessories as $accessory )
 
-                            <x-table.row class="cursor-pointer hover:bg-slate-200" wire:click='buy({{$accessory->id}})' wire:loading.class.delay="opacity-50 ">
+                            <x-table.row class="cursor-pointer hover:bg-slate-200" wire:click='sells({{$accessory->id}})' wire:loading.class.delay="opacity-50 ">
                                 <x-table.cell>{{$accessory->name}}</x-table.cell>
                                 <x-table.cell>{{$accessory->size}}</x-table.cell>
                                 <x-table.cell>{{$accessory->quality}}</x-table.cell>

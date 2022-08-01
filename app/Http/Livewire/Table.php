@@ -7,6 +7,7 @@ use App\Models\boxs;
 use App\Models\buy;
 use App\Models\color;
 use App\Models\devices;
+use App\Models\sell;
 use App\Models\types;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -102,7 +103,7 @@ class Table extends Component
                           ->orderBy($this->sortField, $this->sortDirection)
                           ->paginate(10),
             
-            'buys'=>buy::with('accessory')->where('confirm',0)->get(),
+            'sells'=>sell::with('accessory')->where('confirm',0)->get(),
             'devices' =>devices::get(),
             'types' =>types::get(),
             'colors' =>color::get(),
@@ -111,11 +112,23 @@ class Table extends Component
         return view('livewire.table',$array);
     }
 
-    public function buy(accessories $accessory){
-          buy::create([
+    public function sells(accessories $accessory){
+          sell::create([
                  'accessory_id'=>$accessory->id,
                  'sellPrice'=>$accessory->sellPrice,
                  'quantity'=>1,
           ]);
+    }
+    public function deleteSell(sell $sell){
+          $sell->delete();
+    }
+    public function confirmSell(sell $sell){
+
+        
+          $sell->update(
+            [
+                'confirm'=>1
+            ]
+          );
     }
 }
