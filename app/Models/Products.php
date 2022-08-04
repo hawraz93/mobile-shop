@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class accessories extends Model
+class Products extends Model
 {
     use HasFactory,SoftDeletes,CreatedById;
 
-    protected $table='accessories';
+    protected $table='products';
     protected $guarded=[];
   
 
@@ -36,6 +36,5 @@ class accessories extends Model
     {
         return $this->belongsTo(devices::class, 'device_id', 'id');
     }
-
 
 }

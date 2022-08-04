@@ -35,4 +35,9 @@ Route::middleware([
     Route::get('/boxs', function () {
         return view('boxs');
     })->name('boxs');
+
+
+    Route::get('/buy', function () {
+        return view('buy');
+    })->name('buy');
 });

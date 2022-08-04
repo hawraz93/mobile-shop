@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('sells', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('accessory_id')->constrained('accessories');
+            $table->foreignId('product_id')->constrained('products');
             $table->string('sellPrice');
             $table->string('quantity');
             $table->boolean('confirm')->default(0);

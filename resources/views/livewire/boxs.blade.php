@@ -175,7 +175,7 @@
 
                     <div class="mt-2 w-1/3">
                         <x-label for="quality" value="{{ __('Quality') }}" />
-                        <x-input wire:model.defer="editing.quality" id="quality" type="number"
+                        <x-input wire:model.defer="editing.quality" id="quality" type="text"
                             class="block mt-1 w-full" required autofocus />
                         <x-input-error for="editing.quality" class="mt-2" />
                     </div>

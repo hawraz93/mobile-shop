@@ -6,10 +6,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
-        Schema::create('accessories', function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('size')->nullable();
@@ -35,9 +39,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::create('accessories', function (Blueprint $table){
+        Schema::create('products', function (Blueprint $table){
             $table->dropSoftDeletes();
         });
-        Schema::dropIfExists('accessories');
+        Schema::dropIfExists('products');
     }
 };

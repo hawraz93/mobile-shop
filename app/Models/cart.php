@@ -6,18 +6,17 @@ use App\Traits\CreatedById;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class buy extends Model
+class cart extends Model
 {
-    use HasFactory ,SoftDeletes,CreatedById;
+    use HasFactory,CreatedById;
 
-    protected $table='buys';
+    protected $table='cart';
     protected $guarded=[];
 
 
     /**
-     * Get the user that owns the buy
+     * Get the product that owns the cart
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -25,8 +24,4 @@ class buy extends Model
     {
         return $this->belongsTo(Products::class, 'product_id', 'id');
     }
-
-
-
-    
 }

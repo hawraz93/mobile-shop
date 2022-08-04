@@ -2,13 +2,14 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\accessories;
 use App\Models\boxs;
-use App\Models\buy;
+use App\Models\cart;
 use App\Models\color;
 use App\Models\devices;
-use App\Models\sell;
+use App\Models\Order;
+use App\Models\Products;
 use App\Models\types;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -23,50 +24,56 @@ class Table extends Component
         $this->resetPage();
     }
 
-    public accessories $accessory;
+    public Products $product;
     public $deleteModal=false;
     public $showModel=false;
+    public $orderProduct=[];
 
     public function rules(){
         return[
-            'accessory.name' =>'required|string|max:100',
-            'accessory.size' =>'nullable|string|max:100',
-            'accessory.quality' =>'nullable|string|max:100',
-            'accessory.quantity' =>'required|numeric|max:1000',
-            'accessory.sellPrice' =>'required|numeric|max:1000000',
-            'accessory.buyPrice' =>'required|numeric|max:1000000',
-            'accessory.device_id' =>'required|numeric',
-            'accessory.color_id' =>'nullable|numeric',
-            'accessory.type_id' =>'nullable|numeric',
-            'accessory.box_id' =>'nullable|numeric',
-            'accessory.note' =>'nullable|string|min:5',
+            'product.name' =>'required|string|max:100',
+            'product.size' =>'nullable|string|max:100',
+            'product.quality' =>'nullable|string|max:100',
+            'product.quantity' =>'required|numeric|max:1000',
+            'product.sellPrice' =>'required|numeric|max:1000000',
+            'product.buyPrice' =>'required|numeric|max:1000000',
+            'product.device_id' =>'required|numeric',
+            'product.color_id' =>'nullable|numeric',
+            'product.type_id' =>'nullable|numeric',
+            'product.box_id' =>'nullable|numeric',
+            'product.note' =>'nullable|string|min:5',
         ];
     }
+   
+    public $total=0 ,$qty,$sp;
+   
     public function mount(){
-        $this->accessory = $this->makeBlankColor();
+        $this->product = $this->makeBlankColor();
+        
     }
 
+
     public function makeBlankColor(){
-        return accessories::make();
+        return Products::make();
     }
 
 
     public function create(){
        
-        if($this->accessory->getKey())
-        $this->accessory = $this->makeBlankColor();
+        if($this->product->getKey())
+        $this->product = $this->makeBlankColor();
         $this->showModel=true;
     }
 
     public function save(){
         $this->validate();
-        $this->accessory->save();
+        $this->product->save();
         $this->showModel=false;
     }
 
-    public function edit(accessories $accessories){
-       if($this->accessory->isNot($accessories))
-       $this->accessory = $accessories;
+    public function edit(Products $productId){
+       if($this->product->isNot($productId))
+       $this->product = $productId;
        $this->showModel= true;
     }
 
@@ -74,8 +81,8 @@ class Table extends Component
        $this->deleteModal =$id;
     }
 
-    public function delete(accessories $accessories){
-        $accessories->delete();
+    public function delete(Products $productId){
+        $productId->delete();
         $this->deleteModal= false;
     }
 
@@ -92,43 +99,99 @@ class Table extends Component
             $this->sortField = $field;
     }
 
-
-
-
-
     public function render()
     {
         $array = [
-            'accessories' => accessories::with('device')->where('name', 'like','%'.$this->search.'%')
+            'products' => Products::with('device')->where('name', 'like','%'.$this->search.'%')
                           ->orderBy($this->sortField, $this->sortDirection)
                           ->paginate(10),
-            
-            'sells'=>sell::with('accessory')->where('confirm',0)->get(),
             'devices' =>devices::get(),
             'types' =>types::get(),
             'colors' =>color::get(),
             'boxs' =>boxs::get(),
           ];
-        return view('livewire.table',$array);
+
+          $cartItem =cart::with('product')->get()
+          ->map(function (cart $item){
+            return (object)[
+                    'id' => $item->product_id,
+                    'name' => $item->product->name,
+                    'price' => $item->product->sellPrice,
+                    'quantity' => $item->quantity,
+                    'total' => ($item->quantity *$item->product->sellPrice),
+            ];
+          });
+          
+
+        return view('livewire.table',$array ,compact('cartItem'));
     }
 
-    public function sells(accessories $accessory){
-          sell::create([
-                 'accessory_id'=>$accessory->id,
-                 'sellPrice'=>$accessory->sellPrice,
-                 'quantity'=>1,
-          ]);
-    }
-    public function deleteSell(sell $sell){
-          $sell->delete();
-    }
-    public function confirmSell(sell $sell){
+    public function addToCard($productId){
 
+
+        $cart = cart::where('product_id' ,$productId)->first();
+
+        if (!$cart) {
+            cart::create(['product_id' => $productId, 'quantity' => 1]);
+        }else{
+            $cart->update(['quantity' =>$cart->quantity +1]);
+        }
+
+        $this->emit('updateCard');
+
+    }
+
+    public function increaseQuantity($id ,$quantity){
+        cart::where('product_id' ,$id)->update(['quantity' =>$quantity+1]);
+    }
+    public function decreaseQuantity($id, $quantity){
+        if ($quantity !=1) {
+            cart::where('product_id' ,$id)->update(['quantity' =>$quantity-1]);
+        } else {
+            cart::where('product_id' , $id)->delete();
+        }
         
-          $sell->update(
-            [
-                'confirm'=>1
-            ]
-          );
     }
+
+    public function checkout(){
+       $cart = cart::with('product')->where('user_id' , auth()->id())->get();
+
+       $product = Products::select('id','quantity')
+                  ->whereIn('id',$cart->pluck('product_id'))
+                  ->pluck('quantity' ,'id');
+                  foreach ($cart  as $cartProduct) {
+                    if (!isset($product[$cartProduct->product_id]) || $product[$cartProduct->product_id ] < $cartProduct->quantity) {
+                       $this->checkout_message= 'Error : product '.$cartProduct->product->name.'no found in stock';
+                    }
+                  }
+                  try {
+                    //code...
+         DB::transaction(function() use($cart){
+
+            $order = Order::create([
+                'total_price'=>0
+          ]);
+
+          foreach ($cart as $cartProduct) {
+            $order->product()->attach($cartProduct->product_id,[
+                'quantity' =>$cartProduct->quantity,
+                'price' =>$cartProduct->product->sellPrice,
+            ]);
+
+            $order->increment('total_price' , $cartProduct->quantity * $cartProduct->product->sellPrice);
+
+            Products::find($cartProduct->product_id)->decrement('quantity' , $cartProduct->quantity);
+          }
+
+          cart::where('user_id' , auth()->id() )->delete();
+         });
+
+         
+         } catch (\Throwable $th) {
+            //throw $th;
+         }
+    }
+
+  
+
 }

@@ -17,6 +17,11 @@
                     </x-jet-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-jet-nav-link href="{{ route('buy') }}" :active="request()->routeIs('buy')">
+                        {{ __('Buy') }}
+                    </x-jet-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-jet-nav-link href="{{ route('boxs') }}" :active="request()->routeIs('boxs')">
                         {{ __('Boxs') }}
                     </x-jet-nav-link>
