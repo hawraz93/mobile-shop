@@ -56,11 +56,10 @@
        
         </x-table2>
 
-        <x-button >Ckeckout</x-button>
+       
         @if ($cartItem)
-        
-
-        <div class="py-2 ml-auto mt-5 w-full sm:w-2/4 lg:w-1/4">
+    
+        <div class="py-2 ml-auto mr-10 mt-5 w-full sm:w-2/4 lg:w-1/4 ">
 			<div class="flex justify-between mb-3">
 				<div class="text-gray-800 text-right flex-1">Total incl. GST</div>
 				<div class="text-right w-40">
@@ -76,14 +75,14 @@
 		
 			<div class="py-2 border-t border-b">
 				<div class="flex justify-between">
-					<div class="text-xl text-gray-600 text-right flex-1">Amount due</div>
+					<div class="text-xl text-gray-600 text-right flex-1">total</div>
 					<div class="text-right w-40">
 						<div class="text-xl text-gray-800 font-bold" >{{$total}}</div>
 					</div>
 				</div>
 			</div>
 			</div>
-            
+            <x-button >Ckeckout</x-button>
             @endif
         </form>
     </div>

@@ -118,9 +118,12 @@ class Table extends Component
                     'name' => $item->product->name,
                     'price' => $item->product->sellPrice,
                     'quantity' => $item->quantity,
-                    'total' => ($item->quantity *$item->product->sellPrice),
+                    'total' => ($item->quantity * $item->product->sellPrice),
             ];
           });
+
+
+          $this->total= $cartItem->sum('total');
           
 
         return view('livewire.table',$array ,compact('cartItem'));

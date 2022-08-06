@@ -25,6 +25,7 @@ return new class extends Migration
             $table->foreignId('color_id')->nullable()->constrained('colors');
             $table->foreignId('device_id')->nullable()->constrained('devices');
             $table->foreignId('box_id')->nullable()->constrained('boxs');
+            $table->foreignId('buyOrder_id')->constrained('buy_orders');
             $table->foreignId('user_id')->constrained('users');
             $table->longText('note')->nullable();
             $table->softDeletes();

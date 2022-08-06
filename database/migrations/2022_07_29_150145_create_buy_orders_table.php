@@ -13,16 +13,19 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('buys', function (Blueprint $table) {
+        Schema::create('buy_orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained('products');
-            $table->string('quantity');
-            $table->string('price');
-            $table->string('delegate')->nullable();
-            $table->string('delegate_phone')->nullable();
-            $table->longText('note')->nullable();
+            $table->string('order');
+            $table->integer('price');
+            $table->string('priceType')->nullable();
+            $table->string('rate')->nullable();
+            $table->string('productsNum')->nullable();
+            $table->string('company')->nullable();
+            $table->string('country')->nullable();
+            $table->string('shipping')->nullable();
+            $table->string('note')->nullable();
             $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('buyOrder_id')->constrained('buy_orders');
+
             $table->softDeletes();
             $table->timestamps();
         });
@@ -35,9 +38,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::create('buys', function (Blueprint $table){
+        Schema::create('buy_orders', function (Blueprint $table){
             $table->dropSoftDeletes();
         });
-        Schema::dropIfExists('buys');
+        Schema::dropIfExists('buy_orders');
     }
 };
