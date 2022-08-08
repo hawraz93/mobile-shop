@@ -2,9 +2,12 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\boxs;
 use App\Models\buyOrder;
-use App\Models\Order;
+use App\Models\color;
+use App\Models\devices;
 use App\Models\Products;
+use App\Models\types;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -43,6 +46,10 @@ class Buy extends Component
                           ->latest()
                           ->paginate(10),
             'products' =>Products::paginate(10),
+            'devices' =>devices::get(),
+            'types' =>types::get(),
+            'colors' =>color::get(),
+            'boxs' =>boxs::get(),
           ];
         return view('livewire.buy',$array);
     }
@@ -62,17 +69,32 @@ class Buy extends Component
             'order.price' =>'required|numeric',
             'order.priceType' =>'nullable|string|max:100',
             'order.rate' =>'nullable|numeric',
-            'order.productsNum' =>'nullable|string|min:5',
+            'order.productsNum' =>'nullable|string',
             'order.company' =>'nullable|string|min:3|max:255',
             'order.country' =>'nullable|string|min:3|max:255',
             'order.shipping' =>'nullable|string',
             'order.note' =>'nullable|string|min:5',
        
         ];
+
+        return[
+            'product.name' =>'required|string|max:100',
+            'product.size' =>'nullable|string|max:100',
+            'product.quality' =>'nullable|string|max:100',
+            'product.quantity' =>'required|numeric|max:1000',
+            'product.sellPrice' =>'required|numeric|max:1000000',
+            'product.buyPrice' =>'required|numeric|max:1000000',
+            'product.device_id' =>'required|numeric',
+            'product.color_id' =>'nullable|numeric',
+            'product.type_id' =>'nullable|numeric',
+            'product.box_id' =>'nullable|numeric',
+            'product.note' =>'nullable|string|min:5',
+        ];
     }
 
     public function mount(){
         $this->order = $this->makeBlankOrder();
+        $this->product = $this->makeBlankProduct();
         
     }
     public function makeBlankOrder(){
@@ -83,36 +105,36 @@ class Buy extends Component
             ]
         );
     }   
-    // public function makeBlank(){
-    //     return Products::make();
-    // }
 
-    // public function create(){
-    //    $this->item = $this->makeBlank();
-    // }
+    public function makeBlankProduct(){
+        return Products::make();
+    }
 
-    // public function save(){
-    //     $this->validate();
-    //     $this->item->save();
+    public function createProduct(){
+       $this->product = $this->makeBlankProduct();
+    }
 
-    //     $this->mount();
-    // }
+    public function save(){
+        $this->validate();
+        $this->product->save();
+        $this->mount();
+    }
 
-    // public function edit( ModelsBuy $item){
-    //     $this->item = $item;
+    public function edit( Products $productId){
+        $this->product = $productId;
 
-    // }
-    // public function confirmDelete($id){
-    //     $this->deleteModal =$id;
-    //  }
+    }
+    public function confirmDelete($id){
+        $this->deleteModal =$id;
+     }
  
    
 
-    // public function delete(ModelsBuy $item){
-    //     $item->delete();
-    //     $this->deleteModal= false;
+    public function delete(ModelsBuy $product){
+        $product->delete();
+        $this->deleteModal= false;
 
-    // }
+    }
 
 
     public function addToProduct(){
