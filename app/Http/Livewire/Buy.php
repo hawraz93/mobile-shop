@@ -45,7 +45,9 @@ class Buy extends Component
                           ->orderBy($this->sortField, $this->sortDirection)
                           ->latest()
                           ->paginate(10),
-            'products' =>Products::paginate(10),
+            'products' =>Products::when($this->orderId , function ($query){
+              $query->where('buyOrder_id' ,$this->orderId);
+            })->paginate(10),
             'devices' =>devices::get(),
             'types' =>types::get(),
             'colors' =>color::get(),
@@ -59,8 +61,10 @@ class Buy extends Component
     public buyOrder $order;
     public $deleteModal=false;
     public $showModel=false;
+    public $showModelProduct=false;
 
-    public $productCreate=false;
+    public $showProductCreate=false;
+    public $orderId;
     public $orderProduct=[];
 
     public function rules(){
@@ -74,10 +78,7 @@ class Buy extends Component
             'order.country' =>'nullable|string|min:3|max:255',
             'order.shipping' =>'nullable|string',
             'order.note' =>'nullable|string|min:5',
-       
-        ];
-
-        return[
+     
             'product.name' =>'required|string|max:100',
             'product.size' =>'nullable|string|max:100',
             'product.quality' =>'nullable|string|max:100',
@@ -86,6 +87,7 @@ class Buy extends Component
             'product.buyPrice' =>'required|numeric|max:1000000',
             'product.device_id' =>'required|numeric',
             'product.color_id' =>'nullable|numeric',
+            'product.buyOrder_id' =>'required|numeric',
             'product.type_id' =>'nullable|numeric',
             'product.box_id' =>'nullable|numeric',
             'product.note' =>'nullable|string|min:5',
@@ -97,6 +99,50 @@ class Buy extends Component
         $this->product = $this->makeBlankProduct();
         
     }
+ 
+
+    public function makeBlankProduct(){
+        return Products::make([
+            'buyOrder_id' => $this->orderId,
+        ]);
+    }
+
+    public function createProduct(){
+        if($this->product->getKey())
+        $this->product = $this->makeBlankProduct();
+       $this->showModelProduct=true;
+    }
+
+    public function saveProduct(){
+        $this->validateOnly('product.*');
+        $this->product->save();
+        $this->mount();
+    }
+
+    public function editProduct( Products $productId){
+        $this->product = $productId;
+
+    }
+    public function confirmDeleteProduct($id){
+        $this->deleteModal =$id;
+     }
+ 
+   
+
+    public function deleteProduct(Products $product){
+        $product->delete();
+        $this->deleteModal= false;
+
+    }
+
+
+    public function addToProduct($orderId){
+        $this->orderId = $orderId;
+        $this->mount();
+        $this->showProductCreate=true;
+    }
+
+
     public function makeBlankOrder(){
         return buyOrder::make(
             [
@@ -104,42 +150,7 @@ class Buy extends Component
               'order' =>NOW()->format('dmY'),
             ]
         );
-    }   
-
-    public function makeBlankProduct(){
-        return Products::make();
-    }
-
-    public function createProduct(){
-       $this->product = $this->makeBlankProduct();
-    }
-
-    public function save(){
-        $this->validate();
-        $this->product->save();
-        $this->mount();
-    }
-
-    public function edit( Products $productId){
-        $this->product = $productId;
-
-    }
-    public function confirmDelete($id){
-        $this->deleteModal =$id;
-     }
- 
-   
-
-    public function delete(ModelsBuy $product){
-        $product->delete();
-        $this->deleteModal= false;
-
-    }
-
-
-    public function addToProduct(){
-        $this->productCreate=true;
-    }
+    }  
 
     public function createOrder(){
         if($this->order->getKey())
@@ -148,7 +159,7 @@ class Buy extends Component
     }
 
     public function saveOrder(){
-        $this->validate();
+        $this->validateOnly('order.*');
         $this->order->save();
         $this->showModel=false;
     }

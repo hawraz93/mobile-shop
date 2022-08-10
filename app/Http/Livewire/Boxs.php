@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\accessories;
+use App\Models\Products;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\boxs as ModelsBoxs;
@@ -19,7 +19,7 @@ class Boxs extends Component
     {
         $this->resetPage();
     }
-    public accessories $editing;
+    public Products $editing;
 
     public $showCreateAccessoriesModal=false;
     public $accessoriesDeleteModal=false;
@@ -29,17 +29,17 @@ class Boxs extends Component
 
     public function mount(){
           $this->editing = $this->makeBlankAccessories();
-          $this->editing['color_id'] =4 ;
+          $this->editing['color_id'] = 4 ;
     }
 
     public function makeBlankAccessories(){
-        return accessories::make(['box_id' =>$this->boxId ]);
+        return Products::make(['box_id' =>$this->boxId ]);
     }
    
     public function showAccessories($boxId){
        $this->accessorie=true;
          $this->boxId=$boxId;
-         $this->accessories=accessories::where('box_id' ,$boxId)->get();
+         $this->accessories=Products::where('box_id' ,$boxId)->get();
     }
  
     public function createBoxs(){
@@ -57,14 +57,14 @@ class Boxs extends Component
        $this->accessoriesDeleteModal=$id;
    }
 
-    public function deleteAccessories(accessories $accessorieId){
+    public function deleteAccessories(Products $accessorieId){
         $accessorieId->delete();
         $this->showaccessories($this->boxId);
         $this->accessoriesDeleteModal=false;
 
    }
 
-    public function editAccessories(accessories $accessorie){
+    public function editAccessories(Products $accessorie){
         if($this->editing->isNot($accessorie))    
         $this->editing = $accessorie;
         $this->showCreateAccessoriesModal=true;
